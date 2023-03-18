@@ -1,5 +1,7 @@
 mod chess;
 
 fn main() {
-    println!("Hello, world!");
+   let board = chess::ChessBoard::new();
+   println!("{}", board)
+
 }

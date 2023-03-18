@@ -25,7 +25,7 @@ struct ChessPiece {
     hasMoved: bool,
 }
 
-struct ChessBoard {
+pub struct ChessBoard {
     board: [ChessPiece; AREA],
 }
 
@@ -44,7 +44,7 @@ impl ChessBoard {
         }
     }
 
-    fn new() -> Self{
+    pub fn new() -> Self{
         Self {
             board: [
                 ChessPiece {
@@ -376,7 +376,17 @@ impl ChessBoard {
 }
 
 impl fmt::Display for ChessBoard {
-
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+       for row in 0..ROWS {
+        for  col in 0..COLS{
+            let index = row * COLS + col;
+            self.board[index].fmt(f);
+        }
+        writeln!(f,"");
+       }
+       write!(f,"")
+    }
+    
 }
 
 impl fmt::Display for ChessPiece {

@@ -1,7 +1,7 @@
-mod chess;
+mod play;
 
 fn main() {
-   let board = chess::ChessBoard::new();
-   println!("{}", board)
+   let mut game = play::Game::new();
+   game.play_game("e2e4");
 
 }

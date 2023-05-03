@@ -3,7 +3,7 @@ use cozy_chess::{Board, Move};
 
 /// Returns a legal move that places the color in the worst position
 pub fn get_move(board: &Board) -> Move {
-    let mut min_eval: f32 = f32::INFINITY;
+    let mut min_eval: f32 = f32::NEG_INFINITY;
     let mut cur_move = Move {
         from: A1,
         to: A1,

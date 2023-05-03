@@ -29,7 +29,6 @@ impl Game {
     //  Get if the bot should follow a "book" of bad openings
     //  Make first bot move if player is black
     pub fn new() -> Self {
-        println!("Got here");
         Self {
             board: Board::default(),
             player_is_white: false,
@@ -51,7 +50,7 @@ impl Game {
         if !legal {
             return GameState::AttemptedIllegalMove;
         }
-        self.board.play_unchecked(player_move_actual);
+        self.board.play(player_move_actual);
         self.get_status()
     }
 

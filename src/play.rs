@@ -1,4 +1,3 @@
-use crate::engine;
 use cozy_chess::{Board, Color, GameStatus, Move};
 
 #[derive(Debug, Copy, Clone)]
@@ -12,7 +11,7 @@ pub enum GameState {
 
 #[derive(Debug)]
 pub struct Game {
-    board: Board,
+    pub board: Board,
     player_is_white: bool,
 }
 
@@ -44,7 +43,7 @@ impl Game {
         let player_move_result = player_move.parse::<Move>();
         let player_move_actual = match player_move_result {
             Ok(known_good_move) => known_good_move,
-            Err(e) => {
+            Err(_) => {
                 return GameState::AttemptedIllegalMove;
             }
         };

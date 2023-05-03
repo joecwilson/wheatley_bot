@@ -1,6 +1,9 @@
 use cozy_chess::Board;
 use cozy_chess::{Color, Piece};
 use engine::get_move;
+use std::io;
+
+use crate::play::{Game, GameState};
 mod engine;
 mod play;
 #[derive(Debug, Copy, Clone)]
@@ -21,12 +24,38 @@ enum PossibleChessPiece {
 
 fn main() {
     let mut game = play::Game::new();
-    game.play_game("e2e4");
     print_board(&game.board);
-    println!("My turn");
-    let engine_move = get_move(&game.board);
-    game.board.play(engine_move);
-    print_board(&game.board);
+    let mut state = GameState::AttemptedIllegalMove;
+    // Lets actually get a game
+    loop {
+        state = GameState::AttemptedIllegalMove;
+        while state == GameState::AttemptedIllegalMove {
+            // We need input
+            println!("Enter your move in standard coordinate notation");
+            let mut line = String::new();
+            io::stdin().read_line(&mut line).unwrap();
+            let trimmed = line.trim();
+            state = game.play_game(&trimmed);
+            //state = game.play_game("e2e4");
+        }
+        print_board(&game.board);
+        if state != GameState::InProgress {
+            break;
+        }
+        println!("My turn");
+        let engine_move = get_move(&game.board);
+        game.board.play(engine_move);
+        print_board(&game.board);
+        if state != GameState::InProgress {
+            break;
+        }
+    }
+    match state {
+        GameState::Draw => println!("Draw. Good Game"),
+        GameState::PlayerLose => println!("I win!"),
+        GameState::PlayerWin => println!("You win 😭"),
+        _ => panic!("Unexpected state"),
+    }
 }
 
 fn print_board(board: &Board) {

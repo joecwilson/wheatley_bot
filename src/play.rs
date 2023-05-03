@@ -1,6 +1,6 @@
 use cozy_chess::{Board, Color, GameStatus, Move};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum GameState {
     PlayerWin,
     PlayerLose,
@@ -43,11 +43,13 @@ impl Game {
         let player_move_actual = match player_move_result {
             Ok(known_good_move) => known_good_move,
             Err(_) => {
+                println!("Move could not be parsed.");
                 return GameState::AttemptedIllegalMove;
             }
         };
         let legal = self.board.is_legal(player_move_actual);
         if !legal {
+            println!("Illegal Move.");
             return GameState::AttemptedIllegalMove;
         }
         self.board.play(player_move_actual);

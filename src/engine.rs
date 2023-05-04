@@ -11,7 +11,7 @@ pub fn get_move(board: &Board) -> Move {
     };
     board.generate_moves(|moves| {
         for mv in moves {
-            let cur_eval = get_evaluation(&mv, &board);
+            let cur_eval = get_evaluation(&mv, &board, 3);
             if cur_eval >= min_eval {
                 cur_move = mv;
                 min_eval = cur_eval;
@@ -27,24 +27,41 @@ pub fn get_move(board: &Board) -> Move {
 /// We want to pick the lowest evaluation
 /// INFINITY = Size to move Wins
 /// -INFINITY = Other side Wins
-fn get_evaluation(piece_move: &Move, board: &Board) -> f32 {
+/// depth = the amount of ply to search down. 0 is base case, 1 makes opponent move and stops
+fn get_evaluation(piece_move: &Move, board: &Board, depth: i32) -> f32 {
     // Get how many pieces exist
     let mut board_with_move = board.clone();
     board_with_move.play_unchecked(piece_move.clone());
-    match board_with_move.status() {
-        GameStatus::Drawn => return 0.0,
-        GameStatus::Won => return f32::NEG_INFINITY,
-        GameStatus::Ongoing => (),
-    }
-    // TODO: Implement 3 move repition
+    if depth <= 0 {
+        match board_with_move.status() {
+            GameStatus::Drawn => return 0.0,
+            GameStatus::Won => return f32::NEG_INFINITY,
+            GameStatus::Ongoing => (),
+        }
+        // TODO: Implement 3 move repition
 
-    let mut evaluation: f32 = 0.0;
-    evaluation += get_material_evaluation(&board_with_move) as f32;
-    return evaluation;
+        let mut evaluation: f32 = 0.0;
+        evaluation += get_material_evaluation(&board_with_move) as f32;
+        return evaluation;
+    } else {
+        // Assume other side helps us as much as possible. For them THEY are side to move
+        let mut eval = f32::NEG_INFINITY;
+        board.generate_moves(|moves| {
+            for mv in moves {
+                let cur_eval = get_evaluation(&mv, &board, depth - 1);
+                if cur_eval >= eval {
+                    //cur_move = mv;
+                    eval = cur_eval;
+                }
+            }
+            false
+        });
+        return eval;
+    }
 }
 
-/// Returns the material evaluation of a particular move
-///
+/// Returns the material evaluation of a particular board
+/// Simply counts up the material values
 fn get_material_evaluation(board: &Board) -> i32 {
     let mut material: i32 = 0;
     material += board.colored_pieces(Color::White, Piece::Pawn).len() as i32;

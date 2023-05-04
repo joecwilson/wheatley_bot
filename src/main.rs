@@ -1,9 +1,9 @@
 use cozy_chess::Board;
-use cozy_chess::{Color, Piece};
+use cozy_chess::Color;
 use engine::get_move;
 use std::io;
 
-use crate::play::{Game, GameState};
+use crate::play::GameState;
 mod engine;
 mod play;
 #[derive(Debug, Copy, Clone)]
@@ -25,18 +25,19 @@ enum PossibleChessPiece {
 fn main() {
     let mut game = play::Game::new();
     print_board(&game.board);
-    let mut state = GameState::AttemptedIllegalMove;
+    let mut state: GameState;
     // Lets actually get a game
     loop {
         state = GameState::AttemptedIllegalMove;
+        let engine_prediction = get_move(&game.board);
+        println!("I would make {engine_prediction}");
         while state == GameState::AttemptedIllegalMove {
             // We need input
-            println!("Enter your move in standard coordinate notation");
+            println!("Enter the starting position, followed by the position to move");
             let mut line = String::new();
             io::stdin().read_line(&mut line).unwrap();
             let trimmed = line.trim();
             state = game.play_game(&trimmed);
-            //state = game.play_game("e2e4");
         }
         print_board(&game.board);
         if state != GameState::InProgress {
@@ -53,7 +54,7 @@ fn main() {
     match state {
         GameState::Draw => println!("Draw. Good Game"),
         GameState::PlayerLose => println!("I win!"),
-        GameState::PlayerWin => println!("You win 😭"),
+        GameState::PlayerWin => println!("You win T_T"),
         _ => panic!("Unexpected state"),
     }
 }

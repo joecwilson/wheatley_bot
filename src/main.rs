@@ -72,10 +72,13 @@ fn print_board(board: &Board) {
     for index in 0..64 {
         if index % 8 == 0 {
             println!();
+            let rank = 8 - (index as i32 / 8);
+            print!(" {rank} ");
         }
         print_piece(&chess_pieces[index]);
     }
     println!();
+    println!("    a  b  c  d  e  f  g  h");
 }
 
 fn parse_fen(fen: &str) -> [ChessPiece; 64] {

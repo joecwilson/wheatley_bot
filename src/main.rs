@@ -119,6 +119,7 @@ fn parse_fen(fen: &str) -> [ChessPiece; 64] {
                 }
             }
             'q' => {
+                println!("The black queen is at {index}");
                 chess_pieces[index] = ChessPiece {
                     piece: PossibleChessPiece::Queen,
                     color: Color::Black,
@@ -155,6 +156,7 @@ fn parse_fen(fen: &str) -> [ChessPiece; 64] {
                 }
             }
             'Q' => {
+                println!("The white queen is at {index}");
                 chess_pieces[index] = ChessPiece {
                     piece: PossibleChessPiece::Queen,
                     color: Color::White,

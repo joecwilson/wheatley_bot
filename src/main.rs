@@ -1,5 +1,4 @@
-use cozy_chess::Board;
-use cozy_chess::Color;
+use cozy_chess::{Board, Color, Move};
 use engine::get_move;
 use std::io;
 
@@ -29,8 +28,11 @@ fn main() {
     // Lets actually get a game
     loop {
         state = GameState::AttemptedIllegalMove;
-        let engine_prediction = get_move(&game.board);
-        println!("I would make {engine_prediction}");
+        let engine_prediction: (Move, f32) = get_move(&game.board);
+        println!(
+            "I would make {} and I think the evaluation would be {}",
+            engine_prediction.0, engine_prediction.1
+        );
         while state == GameState::AttemptedIllegalMove {
             // We need input
             println!("Enter the starting position, followed by the position to move");
@@ -45,7 +47,7 @@ fn main() {
         }
         println!("My turn");
         let engine_move = get_move(&game.board);
-        game.board.play(engine_move);
+        game.board.play(engine_move.0);
         print_board(&game.board);
         if state != GameState::InProgress {
             break;

@@ -53,12 +53,11 @@ pub fn get_move(board: &Board) -> (Move, f32) {
     };
     board.generate_moves(|moves| {
         for mv in moves {
-            let cur_eval = get_move_evaluation(&mv, &board, 0, f32::NEG_INFINITY, f32::INFINITY);
+            let cur_eval = get_move_evaluation(&mv, &board, 3, f32::NEG_INFINITY, f32::INFINITY);
             if cur_eval <= max_eval {
                 cur_move = mv;
                 max_eval = cur_eval;
             }
-            println!("The evaluation after making {mv} is {cur_eval}")
         }
         false
     });
@@ -180,12 +179,12 @@ fn get_pawn_piece_square_evaluation(board: &Board) -> i32 {
     let white_pawns = board.colored_pieces(Color::White, Piece::Pawn).into_iter();
     for pawn in white_pawns {
         let index = pawn as usize;
-        pawn_value += PAWN_PIECE_SQUARE_TABLE[index] as i32;
+        pawn_value += PAWN_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
     }
     let black_pawns = board.colored_pieces(Color::Black, Piece::Pawn).into_iter();
     for pawn in black_pawns {
         let index = pawn as usize;
-        pawn_value -= PAWN_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
+        pawn_value -= PAWN_PIECE_SQUARE_TABLE[index] as i32;
     }
     pawn_value
 }
@@ -197,14 +196,14 @@ fn get_bishiop_piece_square_evaluation(board: &Board) -> i32 {
         .into_iter();
     for bishiop in white_bishiops {
         let index = bishiop as usize;
-        bishop_value += BISHIOP_PIECE_SQUARE_TABLE[index] as i32;
+        bishop_value += BISHIOP_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
     }
     let black_bishiops = board
         .colored_pieces(Color::Black, Piece::Bishop)
         .into_iter();
     for bishiop in black_bishiops {
         let index = bishiop as usize;
-        bishop_value -= BISHIOP_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
+        bishop_value -= BISHIOP_PIECE_SQUARE_TABLE[index] as i32;
     }
     bishop_value
 }
@@ -216,14 +215,14 @@ fn get_knight_piece_square_evaluation(board: &Board) -> i32 {
         .into_iter();
     for knight in white_knights {
         let index = knight as usize;
-        knight_value += KNIGHT_PIECE_SQUARE_TABLE[index] as i32;
+        knight_value += KNIGHT_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
     }
     let black_knights = board
         .colored_pieces(Color::Black, Piece::Knight)
         .into_iter();
     for knight in black_knights {
         let index = knight as usize;
-        knight_value -= KNIGHT_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
+        knight_value -= KNIGHT_PIECE_SQUARE_TABLE[index] as i32;
     }
     knight_value
 }
@@ -233,12 +232,12 @@ fn get_rook_piece_square_evaluation(board: &Board) -> i32 {
     let white_rooks = board.colored_pieces(Color::White, Piece::Rook).into_iter();
     for rook in white_rooks {
         let index = rook as usize;
-        rook_value += ROOK_PIECE_SQUARE_TABLE[index] as i32;
+        rook_value += ROOK_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
     }
     let black_rooks = board.colored_pieces(Color::Black, Piece::Rook).into_iter();
     for rook in black_rooks {
         let index = rook as usize;
-        rook_value -= ROOK_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
+        rook_value -= ROOK_PIECE_SQUARE_TABLE[index] as i32;
     }
     rook_value
 }
@@ -248,12 +247,12 @@ fn get_queen_piece_square_evaluation(board: &Board) -> i32 {
     let white_queens = board.colored_pieces(Color::White, Piece::Rook).into_iter();
     for queen in white_queens {
         let index = queen as usize;
-        queen_value += QUEEN_PIECE_SQUARE_TABLE[index] as i32;
+        queen_value += QUEEN_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
     }
     let black_queens = board.colored_pieces(Color::Black, Piece::Rook).into_iter();
     for queen in black_queens {
         let index = queen as usize;
-        queen_value -= QUEEN_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
+        queen_value -= QUEEN_PIECE_SQUARE_TABLE[index] as i32;
     }
     queen_value
 }
@@ -265,13 +264,13 @@ fn get_king_piece_square_evaluation(board: &Board) -> i32 {
     let white_king = board.colored_pieces(Color::White, Piece::Rook).into_iter();
     for king in white_king {
         let index = king as usize;
-        king_value += KING_MIDDLE_GAME_PIECE_SQUARE_TABLE[index] as i32;
+        king_value +=
+            KING_MIDDLE_GAME_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
     }
     let black_king = board.colored_pieces(Color::Black, Piece::Rook).into_iter();
     for king in black_king {
         let index = king as usize;
-        king_value -=
-            KING_MIDDLE_GAME_PIECE_SQUARE_TABLE[(7 - (index / 8)) * 8 + (index % 8)] as i32;
+        king_value -= KING_MIDDLE_GAME_PIECE_SQUARE_TABLE[index] as i32;
     }
     king_value
 }

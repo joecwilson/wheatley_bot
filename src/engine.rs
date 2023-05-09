@@ -81,7 +81,7 @@ fn get_move_evaluation(piece_move: &Move, board: &Board, depth: i32, alpha: f32,
 fn get_board_evaluation(board: &Board, depth: i32, alpha: f32, beta: f32) -> f32 {
     match board.status() {
         GameStatus::Drawn => return 0.0,
-        GameStatus::Won => return f32::NEG_INFINITY,
+        GameStatus::Won => return f32::INFINITY,
         GameStatus::Ongoing => (),
     }
     if depth == 0 {

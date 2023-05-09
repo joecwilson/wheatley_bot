@@ -31,7 +31,8 @@ fn main() {
         let engine_prediction: (Move, f32) = get_move(&game.board);
         println!(
             "I would make {} and I think the evaluation would be {}",
-            engine_prediction.0, engine_prediction.1
+            engine_prediction.0,
+            (engine_prediction.1 / 100.0)
         );
         while state == GameState::AttemptedIllegalMove {
             // We need input

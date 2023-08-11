@@ -5,6 +5,7 @@ use std::io;
 use crate::play::GameState;
 mod engine;
 mod play;
+mod predicted_eval;
 #[derive(Debug, Copy, Clone)]
 struct ChessPiece {
     piece: PossibleChessPiece,

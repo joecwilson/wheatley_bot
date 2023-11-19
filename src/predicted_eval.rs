@@ -211,7 +211,7 @@ fn get_king_piece_square_evaluation(board: &Board) -> i32 {
     king_value
 }
 
-/// Converts an index to a row and column, the row is the first parameter in the tuple, while the column is the second parameter
+/// Converts an index to a row and column
 fn index_to_row_and_col(square: Square) -> RowAndCol {
     let index = square as usize;
     RowAndCol {

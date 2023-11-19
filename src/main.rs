@@ -1,5 +1,5 @@
-use std::process::ExitCode;
 use std::io;
+use std::process::ExitCode;
 
 mod engine;
 mod handle_uci_input;

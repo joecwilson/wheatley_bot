@@ -17,6 +17,38 @@ fn get_white_move(game: Game) -> (Option<Move>, i32) {
     assert_eq!(game.board.side_to_move(), Color::White);
     let mut best_eval = i32::MAX;
     let mut cur_move = Option::None;
+    let enemy_pieces = game.board.colors(Color::Black);
+    // Need to determine if there are captures
+    let mut capture_moves: Vec<Move> = Vec::new();
+    if game.forced_capture {
+        game.board.generate_moves(|moves| {
+            let mut captures = moves.clone();
+            captures.to &= enemy_pieces;
+            for mv in captures {
+                capture_moves.push(mv);
+            }
+            false
+        });
+        if !capture_moves.is_empty() {
+            for mv in capture_moves {
+                let cur_eval = get_move_evaluation(
+                    mv,
+                    &game.board,
+                    3,
+                    i32::MIN,
+                    i32::MAX,
+                    &game.previous_boards,
+                    game.forced_capture,
+                );
+                if cur_eval <= best_eval {
+                    cur_move = Some(mv);
+                    best_eval = cur_eval;
+                }
+            }
+            return (cur_move, best_eval);
+        }
+    }
+
     game.board.generate_moves(|moves| {
         for mv in moves {
             let cur_eval = get_move_evaluation(
@@ -42,6 +74,39 @@ fn get_black_move(game: Game) -> (Option<Move>, i32) {
     assert_eq!(game.board.side_to_move(), Color::Black);
     let mut best_eval = i32::MIN;
     let mut cur_move = Option::None;
+
+    let enemy_pieces = game.board.colors(Color::White);
+    // Need to determine if there are captures
+    let mut capture_moves: Vec<Move> = Vec::new();
+    if game.forced_capture {
+        game.board.generate_moves(|moves| {
+            let mut captures = moves.clone();
+            captures.to &= enemy_pieces;
+            for mv in captures {
+                capture_moves.push(mv);
+            }
+            false
+        });
+        if !capture_moves.is_empty() {
+            for mv in capture_moves {
+                let cur_eval = get_move_evaluation(
+                    mv,
+                    &game.board,
+                    3,
+                    i32::MIN,
+                    i32::MAX,
+                    &game.previous_boards,
+                    game.forced_capture,
+                );
+                if cur_eval <= best_eval {
+                    cur_move = Some(mv);
+                    best_eval = cur_eval;
+                }
+            }
+            return (cur_move, best_eval);
+        }
+    }
+
     game.board.generate_moves(|moves| {
         for mv in moves {
             let cur_eval = get_move_evaluation(

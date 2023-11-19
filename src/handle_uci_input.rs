@@ -99,7 +99,7 @@ pub fn default_game() -> Game {
     Game {
         debug_mode: false,
         board: Board::startpos(),
-        forced_capture: false,
+        forced_capture: true,
         previous_boards: HashMap::new(),
     }
 }

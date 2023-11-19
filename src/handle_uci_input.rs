@@ -43,7 +43,10 @@ pub fn position(input_tokens: &Vec<&str>, game: Game) -> Game {
         // move_history.push(played_move);
         board.play(played_move);
         let board_hash = board.hash();
-        previous_boards.entry(board_hash).and_modify(|board_hash| *board_hash += 1).or_insert(1);
+        previous_boards
+            .entry(board_hash)
+            .and_modify(|board_hash| *board_hash += 1)
+            .or_insert(1);
     }
     Game {
         debug_mode: game.debug_mode,

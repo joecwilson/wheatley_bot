@@ -14,7 +14,7 @@ pub struct Game {
     /// The keys of this hashmap are the hashes of the board
     /// This is not competly safe from collisions, but is likely
     /// good enough for our needs
-    /// The values show the number of times that this 
+    /// The values show the number of times that this
     /// move has been collected
-    pub previous_boards: HashMap<u64, i32>, 
+    pub previous_boards: HashMap<u64, i32>,
 }

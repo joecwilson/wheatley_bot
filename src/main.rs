@@ -1,4 +1,5 @@
-use std::{io, process::ExitCode};
+use std::process::ExitCode;
+use std::io;
 
 mod engine;
 mod handle_uci_input;
@@ -31,10 +32,12 @@ fn main() -> ExitCode {
             "debug" => handle_uci_input::debug(game),
             "isready" => handle_uci_input::is_ready(game),
             "setoption" => handle_uci_input::set_option(&uci_tokens, game),
+            "register" => handle_uci_input::register(game),
+            "ucinewgame" => handle_uci_input::uci_new_game(),
             "position" => handle_uci_input::position(&uci_tokens, game),
             "go" => handle_uci_input::go(&uci_tokens, game),
-            "stop" => handle_uci_input::stop(&uci_tokens, game),
-            "ucinewgame" => handle_uci_input::uci_new_game(&uci_tokens),
+            "stop" => handle_uci_input::stop(game),
+            "ponderhit" => handle_uci_input::ponderhit(game),
             "quit" => return ExitCode::SUCCESS,
             _ => {
                 let first_word = uci_tokens[0];

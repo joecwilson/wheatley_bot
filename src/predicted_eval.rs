@@ -72,6 +72,7 @@ const KING_END_GAME_PIECE_SQUARE_TABLE: [[i8; 8]; 8] = [
     [-50, -30, -30, -30, -30, -30, -30, -50],
 ];
 
+/// Returns the predicted evaluation of a particular board for white in centipawns
 pub fn get_truncated_eval(board: &Board) -> i32 {
     get_material_evaluation(board) + get_piece_square_evaluation(board)
 }
@@ -84,24 +85,23 @@ struct RowAndCol {
 /// Returns the material evaluation of a particular board for white in centipawns
 /// Uses standard material weights
 ///     Pawns == 100 centipawns
-///     Knights == 300 centipawns
+///     Knights == 250 centipawns
 ///     Bishiops == 300 centipawns
 ///     Rooks == 500 centipawns
 ///     Queens == 900 centipawns
 fn get_material_evaluation(board: &Board) -> i32 {
     let mut material: i32 = 0;
-    material += board.colored_pieces(Color::White, Piece::Pawn).len() as i32;
-    material += board.colored_pieces(Color::White, Piece::Knight).len() as i32 * 3;
-    material += board.colored_pieces(Color::White, Piece::Bishop).len() as i32 * 3;
-    material += board.colored_pieces(Color::White, Piece::Rook).len() as i32 * 5;
-    material += board.colored_pieces(Color::White, Piece::Queen).len() as i32 * 9;
+    material += board.colored_pieces(Color::White, Piece::Pawn).len() as i32 * 100;
+    material += board.colored_pieces(Color::White, Piece::Knight).len() as i32 * 250;
+    material += board.colored_pieces(Color::White, Piece::Bishop).len() as i32 * 300;
+    material += board.colored_pieces(Color::White, Piece::Rook).len() as i32 * 500;
+    material += board.colored_pieces(Color::White, Piece::Queen).len() as i32 * 900;
 
-    material -= board.colored_pieces(Color::Black, Piece::Pawn).len() as i32;
-    material -= board.colored_pieces(Color::Black, Piece::Knight).len() as i32 * 3;
-    material -= board.colored_pieces(Color::Black, Piece::Bishop).len() as i32 * 3;
-    material -= board.colored_pieces(Color::Black, Piece::Rook).len() as i32 * 5;
-    material -= board.colored_pieces(Color::Black, Piece::Queen).len() as i32 * 9;
-    material *= 100;
+    material -= board.colored_pieces(Color::Black, Piece::Pawn).len() as i32 * 100;
+    material -= board.colored_pieces(Color::Black, Piece::Knight).len() as i32 * 250;
+    material -= board.colored_pieces(Color::Black, Piece::Bishop).len() as i32 * 300;
+    material -= board.colored_pieces(Color::Black, Piece::Rook).len() as i32 * 500;
+    material -= board.colored_pieces(Color::Black, Piece::Queen).len() as i32 * 900;
     return material;
 }
 

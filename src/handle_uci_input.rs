@@ -1,4 +1,4 @@
-use std::thread::{self, JoinHandle};
+use std::thread::{self};
 
 use cozy_chess::{Board, Move};
 
@@ -31,10 +31,10 @@ pub fn position(input_tokens: &Vec<&str>, game: Game) -> Game {
         handle_uci_output::send_info("Requires a starting point of startpos");
         panic!("Invalid UCI Command")
     }
-    if input_tokens[2] != "moves" {
-        handle_uci_output::send_info("After startpos requires moves");
-        panic!("Invalid UCI Command")
-    }
+    // if input_tokens[2] != "moves" {
+    //     handle_uci_output::send_info("After startpos requires moves");
+    //     panic!("Invalid UCI Command")
+    // }
     let mut board = Board::startpos();
     for i in 3..input_tokens.len() {
         let played_move = input_tokens[i].parse::<Move>().unwrap();
@@ -49,21 +49,29 @@ pub fn position(input_tokens: &Vec<&str>, game: Game) -> Game {
     }
 }
 
-pub fn go(input_tokens: &Vec<&str>, game: Game) -> Game {
+pub fn go(_input_tokens: &Vec<&str>, game: Game) -> Game {
     let new_game = game.clone();
-    let thread = thread::spawn(move || {
-        let engine_response: (Move, f32) = get_move(&game.board);
-        handle_uci_output::best_move(&engine_response.0)
+    let _thread = thread::spawn(move || {
+        let engine_response = get_move(&game.board);
+        handle_uci_output::best_move(&engine_response.0.unwrap())
     });
     new_game
 }
 
-pub fn stop(input_tokens: &Vec<&str>, game: Game) -> Game {
+pub fn stop(game: Game) -> Game {
     game
 }
 
-pub fn uci_new_game(input_tokens: &Vec<&str>) -> Game {
+pub fn uci_new_game() -> Game {
     default_game()
+}
+
+pub fn register(game: Game) -> Game {
+    game
+}
+
+pub fn ponderhit(game: Game) -> Game {
+    game
 }
 
 pub fn default_game() -> Game {

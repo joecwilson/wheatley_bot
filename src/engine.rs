@@ -26,6 +26,7 @@ fn get_white_move(game: Game) -> (Option<Move>, i32) {
                 i32::MIN,
                 i32::MAX,
                 &game.previous_boards,
+                game.forced_capture,
             );
             if cur_eval <= best_eval {
                 cur_move = Some(mv);
@@ -50,6 +51,7 @@ fn get_black_move(game: Game) -> (Option<Move>, i32) {
                 i32::MIN,
                 i32::MAX,
                 &game.previous_boards,
+                game.forced_capture,
             );
             if cur_eval >= best_eval {
                 cur_move = Some(mv);
@@ -72,6 +74,7 @@ fn get_move_evaluation(
     alpha: i32,
     beta: i32,
     previous_boards: &HashMap<u64, i32>,
+    forced_capture: bool,
 ) -> i32 {
     let mut board_with_move = board.clone();
     let mut prev_boards = previous_boards.clone();
@@ -81,7 +84,14 @@ fn get_move_evaluation(
         .entry(board_hash)
         .and_modify(|board_hash| *board_hash += 1)
         .or_insert(1);
-    get_board_evaluation(&board_with_move, depth, alpha, beta, &prev_boards)
+    get_board_evaluation(
+        &board_with_move,
+        depth,
+        alpha,
+        beta,
+        &prev_boards,
+        forced_capture,
+    )
 }
 
 /// Returns the evaluation for white for a specific move. Assumes players will pick the move that hurts them the most
@@ -94,6 +104,7 @@ fn get_board_evaluation(
     alpha: i32,
     beta: i32,
     previous_boards: &HashMap<u64, i32>,
+    forced_capture: bool,
 ) -> i32 {
     for val in previous_boards.values() {
         if *val >= 3 {
@@ -127,6 +138,7 @@ fn get_board_evaluation(
                     new_alpha,
                     new_beta,
                     previous_boards,
+                    forced_capture,
                 );
                 evaluation = max(potential_eval, evaluation);
                 if evaluation > new_beta {
@@ -147,6 +159,7 @@ fn get_board_evaluation(
                     new_alpha,
                     new_beta,
                     previous_boards,
+                    forced_capture,
                 );
                 evaluation = min(potential_eval, evaluation);
                 if evaluation < new_alpha {

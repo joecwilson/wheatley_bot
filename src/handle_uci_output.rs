@@ -5,6 +5,11 @@ pub fn id() {
     println!("id name wheatleybot Alpha.11.19.2023");
     println!("id author Joseph Wilson");
     println!("uciok");
+    get_options();
+}
+
+fn get_options() {
+    println!("option name ForceCapture type check default true");
 }
 
 /// Responds to the isready command

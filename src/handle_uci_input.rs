@@ -21,8 +21,22 @@ pub fn is_ready(game: Game) -> Game {
     game
 }
 
-pub fn set_option(_input_tokens: &Vec<&str>, game: Game) -> Game {
-    game
+pub fn set_option(input_tokens: &Vec<&str>, game: Game) -> Game {
+    if input_tokens[1] != "name" {
+        handle_uci_output::send_info("Invalid option sent, name not present");
+        panic!("Invalid UCI Command");
+    }
+    if input_tokens[2] != "ForcedCapture" {
+        handle_uci_output::send_info("Invalid option sent, id not reckonised");
+        panic!("Invalid UCI Command");
+    }
+    let forced_capture = input_tokens[4].parse().unwrap();
+    Game {
+        debug_mode: game.debug_mode,
+        forced_capture: forced_capture,
+        board: game.board,
+        previous_boards: game.previous_boards,
+    }
 }
 
 pub fn position(input_tokens: &Vec<&str>, game: Game) -> Game {

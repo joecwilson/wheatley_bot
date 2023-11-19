@@ -61,16 +61,6 @@ const KING_MIDDLE_GAME_PIECE_SQUARE_TABLE: [[i8; 8]; 8] = [
     [20, 20, 0, 0, 0, 0, 20, 20],
     [20, 30, 10, 0, 0, 10, 30, 20],
 ];
-const KING_END_GAME_PIECE_SQUARE_TABLE: [[i8; 8]; 8] = [
-    [-50, -40, -30, -20, -20, -30, -40, -50],
-    [-30, -20, -10, 0, 0, -10, -20, -30],
-    [-30, -10, 20, 30, 30, 20, -10, -30],
-    [-30, -10, 30, 40, 40, 30, -10, -30],
-    [-30, -10, 30, 40, 40, 30, -10, -30],
-    [-30, -10, 20, 30, 30, 20, -10, -30],
-    [-30, -30, 0, 0, 0, 0, -30, -30],
-    [-50, -30, -30, -30, -30, -30, -30, -50],
-];
 
 /// Returns the predicted evaluation of a particular board for white in centipawns
 pub fn get_truncated_eval(board: &Board) -> i32 {

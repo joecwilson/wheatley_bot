@@ -20,7 +20,7 @@ pub fn is_ready(game: Game) -> Game {
     game
 }
 
-pub fn set_option(input_tokens: &Vec<&str>, game: Game) -> Game {
+pub fn set_option(_input_tokens: &Vec<&str>, game: Game) -> Game {
     game
 }
 

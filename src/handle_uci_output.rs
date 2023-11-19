@@ -2,7 +2,7 @@ use cozy_chess::Move;
 
 /// Implements the response to the id command
 pub fn id() {
-    println!("id name wheatleybot Alpha.08.15.2023");
+    println!("id name wheatleybot Alpha.11.19.2023");
     println!("id author Joseph Wilson");
     println!("uciok");
 }

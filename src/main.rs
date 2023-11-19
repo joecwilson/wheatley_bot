@@ -16,7 +16,6 @@ fn main() -> ExitCode {
         .expect("Error When awaiting UCI signal");
 
     if uci_input != "uci\n" {
-        // println!("Expected uci command to be given");
         handle_uci_output::send_info("Expected UCI Command to be given");
         return ExitCode::FAILURE;
     }

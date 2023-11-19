@@ -7,16 +7,38 @@ use cozy_chess::{Board, Color, GameStatus, Move};
 /// Additionally returns the evaluation after said move
 pub fn get_move(board: &Board) -> (Option<Move>, i32) {
     let side_to_move = board.side_to_move();
+    match side_to_move {
+        Color::White => get_white_move(board),
+        Color::Black => get_black_move(board)
+    }
+}
+
+
+fn get_white_move(board: &Board) -> (Option<Move>, i32) {
+    assert_eq!(board.side_to_move(), Color::White);
     let mut best_eval = i32::MAX;
     let mut cur_move = Option::None;
     board.generate_moves(|moves| {
         for mv in moves {
             let cur_eval = get_move_evaluation(mv, &board, 3, i32::MIN, i32::MAX);
-            match side_to_move {
-                Color::Black => {}
-                Color::White => {}
-            }
             if cur_eval <= best_eval {
+                cur_move = Some(mv);
+                best_eval = cur_eval;
+            }
+        }
+        false
+    });
+    (cur_move, best_eval)
+}
+
+fn get_black_move(board: &Board) -> (Option<Move>, i32) {
+    assert_eq!(board.side_to_move(), Color::Black);
+    let mut best_eval = i32::MIN;
+    let mut cur_move = Option::None;
+    board.generate_moves(|moves| {
+        for mv in moves {
+            let cur_eval = get_move_evaluation(mv, &board, 3, i32::MIN, i32::MAX);
+            if cur_eval >= best_eval {
                 cur_move = Some(mv);
                 best_eval = cur_eval;
             }

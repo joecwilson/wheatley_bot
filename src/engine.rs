@@ -143,7 +143,7 @@ fn get_move_evaluation(
 ) -> i32 {
     let mut board_with_move = board.clone();
     let mut prev_boards = previous_boards.clone();
-    board_with_move.play_unchecked(piece_move);
+    board_with_move.play(piece_move);
     let board_hash = board_with_move.hash();
     prev_boards
         .entry(board_hash)

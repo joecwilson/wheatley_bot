@@ -98,7 +98,7 @@ fn get_black_move(game: Game) -> (Option<Move>, i32) {
                     &game.previous_boards,
                     game.forced_capture,
                 );
-                if cur_eval <= best_eval {
+                if cur_eval >= best_eval {
                     cur_move = Some(mv);
                     best_eval = cur_eval;
                 }

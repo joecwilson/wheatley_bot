@@ -1,8 +1,10 @@
 use cozy_chess::Move;
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 /// Implements the response to the id command
 pub fn id() {
-    println!("id name wheatleybot Alpha.11.19.2023");
+    println!("id name wheatleybot v.{VERSION}");
     println!("id author Joseph Wilson");
     get_options();
     println!("uciok");

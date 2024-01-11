@@ -1,6 +1,6 @@
 use crate::{play::Game, play::MoveEval, predicted_eval::get_truncated_eval};
 use cozy_chess::{Board, Color, GameStatus, Move};
-use std::{cmp::max, cmp::min, collections::HashMap};
+use std::{cmp::max, cmp::min, collections::HashMap, sync::atomic::Ordering};
 
 /// Returns a legal move that places the player to move in the worst position
 /// Additionally returns the evaluation after said move
@@ -13,12 +13,13 @@ pub fn get_move(game: Game) -> Game {
         Color::White => move_list.first().unwrap().clone(),
         Color::Black => move_list.last().unwrap().clone(),
     };
-    // eprintln!("Board = {}", game.board);
-    // eprintln!("side_to_move = {side_to_move}, best_move = {tmp_best_move:?}, first move list = {move_list:?}");
 
     *binding = Option::Some(tmp_best_move);
     drop(binding);
     for depth in 1..=3 {
+        if game.stop_search.load(Ordering::SeqCst) {
+            break;
+        }
         move_list = get_move_iterative(game.clone(), depth, move_list);
         let mut binding = older_binding.lock().unwrap();
         let side_to_move = game.board.side_to_move();
@@ -26,7 +27,6 @@ pub fn get_move(game: Game) -> Game {
             Color::White => move_list.first().unwrap().clone(),
             Color::Black => move_list.last().unwrap().clone(),
         };
-        // eprintln!("depth {depth} search  {side_to_move}, best_move = {tmp_best_move:?}, first move list = {move_list:?}");
         *binding = Option::Some(tmp_best_move);
         drop(binding);
     }
@@ -179,7 +179,6 @@ fn get_board_evaluation(
     // Deal with game ending evaluation
     for val in previous_boards.values() {
         if *val >= 3 {
-            // eprintln!("3 fold repitition on board = {board}");
             return 0; // 3 fold reprition, stop
         }
     }
@@ -189,18 +188,15 @@ fn get_board_evaluation(
         GameStatus::Won => match board.side_to_move() {
             // Recall loser is current side to move
             Color::Black => {
-                // eprintln!("White Mate found, board = {board}");
                 return i32::MAX;
             }
             Color::White => {
-                // eprintln!("Black Mate found, board = {board}");
                 return i32::MIN;
             }
         },
         GameStatus::Ongoing => (),
     }
     if board.halfmove_clock() >= 50 {
-        // eprintln!("half move clock exceeded on board = {board}");
         return 0;
     }
     if depth == 0 {

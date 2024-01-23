@@ -30,4 +30,6 @@ pub struct Game {
     pub current_best_move: Option<Arc<Mutex<Option<MoveEval>>>>,
     /// Weither to stop a search
     pub stop_search: Arc<AtomicBool>,
+    /// If a move has been set
+    pub move_set: Arc<AtomicBool>,
 }

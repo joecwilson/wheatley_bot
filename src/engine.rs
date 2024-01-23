@@ -1,6 +1,6 @@
 use crate::{play::Game, play::MoveEval, predicted_eval::get_truncated_eval};
 use cozy_chess::{Board, Color, GameStatus, Move};
-use std::{cmp::max, cmp::min, collections::HashMap};
+use std::{cmp::max, cmp::min, collections::HashMap, sync::atomic::Ordering, thread, time::Duration};
 
 /// Returns a legal move that places the player to move in the worst position
 /// Additionally returns the evaluation after said move
@@ -13,12 +13,13 @@ pub fn get_move(game: Game) -> Game {
         Color::White => move_list.first().unwrap().clone(),
         Color::Black => move_list.last().unwrap().clone(),
     };
+    game.move_set.store(true,Ordering::SeqCst);
     // eprintln!("Board = {}", game.board);
     // eprintln!("side_to_move = {side_to_move}, best_move = {tmp_best_move:?}, first move list = {move_list:?}");
 
     *binding = Option::Some(tmp_best_move);
     drop(binding);
-    for depth in 1..=3 {
+    for depth in 1..=50 {
         move_list = get_move_iterative(game.clone(), depth, move_list);
         let mut binding = older_binding.lock().unwrap();
         let side_to_move = game.board.side_to_move();
@@ -30,7 +31,14 @@ pub fn get_move(game: Game) -> Game {
         *binding = Option::Some(tmp_best_move);
         drop(binding);
     }
-    game
+
+    loop {
+        thread::sleep(Duration::from_millis(1));
+        let stopped = game.stop_search.load(Ordering::SeqCst);
+        if stopped {
+            return game;
+        }
+    }
 }
 
 fn get_move_iterative(game: Game, depth: i32, mut move_list: Vec<MoveEval>) -> Vec<MoveEval> {
